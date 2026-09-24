@@ -1,0 +1,26 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Build output
+bin/
+obj/
+
+# Test results
+TestResults/
+
+# NuGet
+packages/
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.*
+
+# User-specific files
+*.user
+*.rsuser
+*.suo
