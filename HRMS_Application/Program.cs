@@ -24,6 +24,18 @@ builder.Services.AddScoped<EmployeeService>();
 builder.Services.AddScoped<DepartmentRepository>();
 builder.Services.AddScoped<DepartmentService>();
 
+builder.Services.AddScoped<EmployeeDocumentRepository>();
+builder.Services.AddScoped<EmployeeDocumentService>();
+
+builder.Services.AddScoped<LeaveTypeRepository>();
+builder.Services.AddScoped<LeaveTypeService>();
+
+builder.Services.AddScoped<LeaveRequestRepository>();
+builder.Services.AddScoped<LeaveRequestService>();
+
+
+builder.Services.AddScoped<LeaveRequestRepository>();
+builder.Services.AddScoped<LeaveRequestService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

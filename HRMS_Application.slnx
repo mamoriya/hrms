@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
+  </Folder>
   <Project Path="HRMS_Application.Tests/HRMS_Application.Tests.csproj" />
   <Project Path="HRMS_Application/HRMS_Application.csproj" />
 </Solution>
