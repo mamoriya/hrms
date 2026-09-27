@@ -37,6 +37,9 @@ builder.Services.AddScoped<LeaveRequestService>();
 builder.Services.AddScoped<LeaveRequestRepository>();
 builder.Services.AddScoped<LeaveRequestService>();
 
+builder.Services.AddScoped<AuthRepository>();
+builder.Services.AddScoped<AuthService>();
+
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
