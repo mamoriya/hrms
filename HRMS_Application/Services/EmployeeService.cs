@@ -59,5 +59,18 @@ namespace HRMS_Application.Services
 
             return await _repository.UpdateEmployee(existingEmployee);
         }
+
+
+        public async Task<bool> IsEmployeeOwner(int employeeId, int userId)
+        {
+            var employee = await _repository.GetEmployeeById(employeeId);
+
+            if (employee == null)
+            {
+                return false;
+            }
+
+            return employee.UserId == userId;
+        }
     }
 }

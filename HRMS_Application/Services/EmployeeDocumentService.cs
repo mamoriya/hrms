@@ -6,10 +6,14 @@ namespace HRMS_Application.Services
     public class EmployeeDocumentService
     {
         private readonly EmployeeDocumentRepository _repository;
+        private readonly EmployeeRepository _employeeRepository;
 
-        public EmployeeDocumentService(EmployeeDocumentRepository repository)
+        public EmployeeDocumentService(
+            EmployeeDocumentRepository repository,
+            EmployeeRepository employeeRepository)
         {
             _repository = repository;
+            _employeeRepository = employeeRepository;
         }
 
         public async Task<EmployeeDocument?> AddDocument(
@@ -118,5 +122,19 @@ namespace HRMS_Application.Services
 
             return true;
         }
+
+
+        public async Task<bool> IsEmployeeOwner(int employeeId,int userId)
+        {
+            var employee = await _employeeRepository.GetEmployeeById(employeeId);
+
+            if (employee == null)
+            {
+                return false;
+            }
+
+            return employee.UserId == userId;
+        }
+
     }
 }

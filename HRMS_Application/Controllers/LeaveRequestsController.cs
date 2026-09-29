@@ -1,5 +1,6 @@
 ﻿using HRMS_Application.Models;
 using HRMS_Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,7 @@ namespace HRMS_Application.Controllers
             _service = service;
         }
 
+        [Authorize(Roles = "Employee")]
         [HttpPost]
         public async Task<IActionResult> CreateLeaveRequest(
             LeaveRequest leaveRequest)
@@ -28,6 +30,7 @@ namespace HRMS_Application.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpPost("{id}/approve")]
         public async Task<IActionResult> ApproveLeaveRequest(int id)
         {
@@ -39,6 +42,7 @@ namespace HRMS_Application.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpPost("{id}/reject")]
         public async Task<IActionResult> RejectLeaveRequest(
             int id,

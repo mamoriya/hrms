@@ -51,5 +51,11 @@ namespace HRMS_Application.Repositories
 
             return employee;
         }
+
+        public async Task<EmployeeProfile?> GetEmployeeByUserId(int userId)
+        {
+            return await _context.EmployeeProfiles
+                .FirstOrDefaultAsync(e => e.UserId == userId);
+        }
     }
 }

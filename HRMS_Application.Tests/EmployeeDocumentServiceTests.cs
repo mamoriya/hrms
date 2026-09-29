@@ -39,7 +39,11 @@ namespace HRMS_Application.Tests
             await context.SaveChangesAsync();
 
             var repository = new EmployeeDocumentRepository(context);
-            var service = new EmployeeDocumentService(repository);
+            var employeeRepository = new EmployeeRepository(context);
+
+            var service = new EmployeeDocumentService(
+                repository,
+                employeeRepository);
 
             var document = new EmployeeDocument
             {
@@ -63,7 +67,11 @@ namespace HRMS_Application.Tests
             using var context = CreateContext();
 
             var repository = new EmployeeDocumentRepository(context);
-            var service = new EmployeeDocumentService(repository);
+            var employeeRepository = new EmployeeRepository(context);
+
+            var service = new EmployeeDocumentService(
+                repository,
+                employeeRepository);
 
             var document = new EmployeeDocument
             {
@@ -98,7 +106,11 @@ namespace HRMS_Application.Tests
             await context.SaveChangesAsync();
 
             var repository = new EmployeeDocumentRepository(context);
-            var service = new EmployeeDocumentService(repository);
+            var employeeRepository = new EmployeeRepository(context);
+
+            var service = new EmployeeDocumentService(
+                repository,
+                employeeRepository);
 
             var document = new EmployeeDocument
             {
@@ -133,7 +145,11 @@ namespace HRMS_Application.Tests
             await context.SaveChangesAsync();
 
             var repository = new EmployeeDocumentRepository(context);
-            var service = new EmployeeDocumentService(repository);
+            var employeeRepository = new EmployeeRepository(context);
+
+            var service = new EmployeeDocumentService(
+                repository,
+                employeeRepository);
 
             var document = new EmployeeDocument
             {
@@ -178,7 +194,11 @@ namespace HRMS_Application.Tests
             await context.SaveChangesAsync();
 
             var repository = new EmployeeDocumentRepository(context);
-            var service = new EmployeeDocumentService(repository);
+            var employeeRepository = new EmployeeRepository(context);
+
+            var service = new EmployeeDocumentService(
+                repository,
+                employeeRepository);
 
             var result = await service.GetDocumentsByEmployeeId(1);
 
@@ -192,7 +212,11 @@ namespace HRMS_Application.Tests
             using var context = CreateContext();
 
             var repository = new EmployeeDocumentRepository(context);
-            var service = new EmployeeDocumentService(repository);
+            var employeeRepository = new EmployeeRepository(context);
+
+            var service = new EmployeeDocumentService(
+                repository,
+                employeeRepository);
 
             var result = await service.GetDocumentsByEmployeeId(999);
 
@@ -217,7 +241,11 @@ namespace HRMS_Application.Tests
             await context.SaveChangesAsync();
 
             var repository = new EmployeeDocumentRepository(context);
-            var service = new EmployeeDocumentService(repository);
+            var employeeRepository = new EmployeeRepository(context);
+
+            var service = new EmployeeDocumentService(
+                repository,
+                employeeRepository);
 
             var result = await service.GetDocumentById(1, 1);
 
@@ -243,7 +271,11 @@ namespace HRMS_Application.Tests
             await context.SaveChangesAsync();
 
             var repository = new EmployeeDocumentRepository(context);
-            var service = new EmployeeDocumentService(repository);
+            var employeeRepository = new EmployeeRepository(context);
+
+            var service = new EmployeeDocumentService(
+                repository,
+                employeeRepository);
 
             var result = await service.DeleteDocument(1, 1);
 
@@ -274,7 +306,11 @@ namespace HRMS_Application.Tests
             await context.SaveChangesAsync();
 
             var repository = new EmployeeDocumentRepository(context);
-            var service = new EmployeeDocumentService(repository);
+            var employeeRepository = new EmployeeRepository(context);
+
+            var service = new EmployeeDocumentService(
+                repository,
+                employeeRepository);
 
             var document = new EmployeeDocument
             {
@@ -310,7 +346,11 @@ namespace HRMS_Application.Tests
             await context.SaveChangesAsync();
 
             var repository = new EmployeeDocumentRepository(context);
-            var service = new EmployeeDocumentService(repository);
+            var employeeRepository = new EmployeeRepository(context);
+
+            var service = new EmployeeDocumentService(
+                repository,
+                employeeRepository);
 
             var document = new EmployeeDocument
             {

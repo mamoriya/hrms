@@ -1,7 +1,8 @@
 ﻿using HRMS_Application.Models;
 using HRMS_Application.Services;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace HRMS_Application.Controllers
 {
@@ -17,11 +18,35 @@ namespace HRMS_Application.Controllers
             _service = service;
         }
 
+        private int GetCurrentUserId()
+        {
+            return int.Parse(
+                User.FindFirstValue(
+                    ClaimTypes.NameIdentifier)!
+            );
+        }
+
+        [Authorize(Roles = "Admin,Employee")]
         [HttpPost]
         public async Task<IActionResult> AddDocument(
             int id,
             EmployeeDocument document)
         {
+            var role = User.FindFirstValue(ClaimTypes.Role);
+
+            if (role == "Employee")
+            {
+                var userId = GetCurrentUserId();
+
+                var isOwner =
+                    await _service.IsEmployeeOwner(id, userId);
+
+                if (!isOwner)
+                {
+                    return Forbid();
+                }
+            }
+
             document.EmployeeProfileId = id;
 
             var result = await _service.AddDocument(document);
@@ -34,20 +59,52 @@ namespace HRMS_Application.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Admin,Employee")]
         [HttpGet]
         public async Task<IActionResult> GetDocuments(int id)
         {
+            var role = User.FindFirstValue(ClaimTypes.Role);
+
+            if (role == "Employee")
+            {
+                var userId = GetCurrentUserId();
+
+                var isOwner =
+                    await _service.IsEmployeeOwner(id, userId);
+
+                if (!isOwner)
+                {
+                    return Forbid();
+                }
+            }
+
             var documents =
                 await _service.GetDocumentsByEmployeeId(id);
 
             return Ok(documents);
         }
 
+        [Authorize(Roles = "Admin,Employee")]
         [HttpGet("{documentId}")]
         public async Task<IActionResult> GetDocument(
             int id,
             int documentId)
         {
+            var role = User.FindFirstValue(ClaimTypes.Role);
+
+            if (role == "Employee")
+            {
+                var userId = GetCurrentUserId();
+
+                var isOwner =
+                    await _service.IsEmployeeOwner(id, userId);
+
+                if (!isOwner)
+                {
+                    return Forbid();
+                }
+            }
+
             var document =
                 await _service.GetDocumentById(id, documentId);
 
@@ -59,6 +116,7 @@ namespace HRMS_Application.Controllers
             return Ok(document);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{documentId}")]
         public async Task<IActionResult> DeleteDocument(
             int id,

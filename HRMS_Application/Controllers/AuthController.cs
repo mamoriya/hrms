@@ -2,6 +2,8 @@
 using HRMS_Application.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace HRMS_Application.Controllers
 {
@@ -16,6 +18,7 @@ namespace HRMS_Application.Controllers
             _service = service;
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginRequest request)
         {
@@ -29,6 +32,7 @@ namespace HRMS_Application.Controllers
             return Ok(result);
         }
 
+        [AllowAnonymous]
         [HttpPost("setup-password")]
         public async Task<IActionResult> SetupPassword(
             SetupPasswordRequest request)
@@ -41,6 +45,23 @@ namespace HRMS_Application.Controllers
             }
 
             return Ok(result);
+        }
+
+
+        [Authorize]
+        [HttpGet("me")]
+        public IActionResult Me()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var email = User.FindFirstValue(ClaimTypes.Email);
+            var role = User.FindFirstValue(ClaimTypes.Role);
+
+            return Ok(new
+            {
+                Id = userId,
+                Email = email,
+                Role = role
+            });
         }
     }
 }

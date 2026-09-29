@@ -1,5 +1,6 @@
 ﻿using HRMS_Application.Models;
 using HRMS_Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,7 @@ namespace HRMS_Application.Controllers
             _service = service;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateLeaveType(
             LeaveType leaveType)
@@ -30,6 +32,7 @@ namespace HRMS_Application.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Admin,Manager,Employee")]
         [HttpGet]
         public async Task<IActionResult> GetAllLeaveTypes()
         {
@@ -38,6 +41,7 @@ namespace HRMS_Application.Controllers
             return Ok(leaveTypes);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateLeaveType(
             int id,
@@ -54,6 +58,7 @@ namespace HRMS_Application.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLeaveType(int id)
         {

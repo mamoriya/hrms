@@ -53,5 +53,13 @@ namespace HRMS_Application.Repositories
 
             await _context.SaveChangesAsync();
         }
+
+
+        public async Task<EmployeeDocument?> GetDocumentById(int documentId)
+        {
+            return await _context.EmployeeDocuments
+                .FirstOrDefaultAsync(d => d.Id == documentId);
+        }
+      
     }
 }

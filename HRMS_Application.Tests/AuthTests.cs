@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Extensions.Configuration;
 
 namespace HRMS_Application.Tests
 {
@@ -22,7 +23,16 @@ namespace HRMS_Application.Tests
 
             var repository = new AuthRepository(context);
 
-            return new AuthService(repository);
+            var configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(new Dictionary<string, string?>
+                {
+                    ["Jwt:Key"] = "HRMS_Application_Secret_Key_Change_This_123456789",
+                    ["Jwt:Issuer"] = "HRMS_Application",
+                    ["Jwt:Audience"] = "HRMS_Client"
+                })
+                .Build();
+
+            return new AuthService(repository, configuration);
         }
 
         [Fact]
