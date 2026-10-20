@@ -50,6 +50,49 @@ namespace HRMS_Application.Repositories
             await _context.SaveChangesAsync();
         }
 
+
+        public async Task DeleteDepartmentWithEmployees(
+            Department department,
+            int? newDepartmentId)
+        {
+            await using var transaction =
+                await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                await ReassignEmployees(
+                    department.Id,
+                    newDepartmentId);
+
+                await _context.SaveChangesAsync();
+
+                _context.Departments.Remove(department);
+
+                await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+
+        public async Task ReassignEmployees(
+            int oldDepartmentId,
+            int? newDepartmentId)
+        {
+            var employees = await _context.EmployeeProfiles
+                .Where(e => e.DepartmentId == oldDepartmentId)
+                .ToListAsync();
+
+            foreach (var employee in employees)
+            {
+                employee.DepartmentId = newDepartmentId;
+            }
+        }
+
         public async Task<bool> NameExists(string name)
         {
             return await _context.Departments

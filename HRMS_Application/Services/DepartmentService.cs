@@ -37,9 +37,7 @@ namespace HRMS_Application.Services
             return await _repository.GetAllDepartments();
         }
 
-        public async Task<Department?> UpdateDepartment(
-            int id,
-            Department department)
+        public async Task<Department?> UpdateDepartment( int id, Department department)
         {
             var existingDepartment =
                 await _repository.GetDepartmentById(id);
@@ -59,7 +57,10 @@ namespace HRMS_Application.Services
             return await _repository.UpdateDepartment(existingDepartment);
         }
 
-        public async Task<bool> DeleteDepartment(int id)
+
+        public async Task<bool> DeleteDepartment(
+            int id,
+            int? newDepartmentId)
         {
             var department =
                 await _repository.GetDepartmentById(id);
@@ -69,9 +70,31 @@ namespace HRMS_Application.Services
                 return false;
             }
 
-            await _repository.DeleteDepartment(department);
+            if (newDepartmentId == id)
+            {
+                throw new ArgumentException(
+                    "Employees cannot be reassigned to the department being deleted.");
+            }
+
+            if (newDepartmentId.HasValue)
+            {
+                var targetDepartment =
+                    await _repository.GetDepartmentById(
+                        newDepartmentId.Value);
+
+                if (targetDepartment == null)
+                {
+                    throw new ArgumentException(
+                        "Selected destination department does not exist.");
+                }
+            }
+
+            await _repository.DeleteDepartmentWithEmployees(
+                department,
+                newDepartmentId);
 
             return true;
         }
+
     }
 }

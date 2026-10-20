@@ -16,61 +16,34 @@ namespace HRMS_Application.Services
             _employeeRepository = employeeRepository;
         }
 
-        public async Task<EmployeeDocument?> AddDocument(
-            EmployeeDocument document)
+        public async Task<EmployeeDocument?> AddDocument(EmployeeDocument document)
         {
-            if (document == null)
-            {
+            if (document == null) return null;
+            if (document.EmployeeProfileId <= 0) return null;
+            if (string.IsNullOrWhiteSpace(document.FileName)) return null;
+            if (string.IsNullOrWhiteSpace(document.FileType)) return null;
+            if (document.FileData == null || document.FileData.Length == 0)
                 return null;
-            }
-
-            if (document.EmployeeProfileId <= 0)
-            {
-                return null;
-            }
-
-            if (string.IsNullOrWhiteSpace(document.FileName))
-            {
-                return null;
-            }
-
-            if (string.IsNullOrWhiteSpace(document.FileType))
-            {
-                return null;
-            }
-
-            if (string.IsNullOrWhiteSpace(document.FilePath))
-            {
-                return null;
-            }
-
-            if (document.FileSize <= 0)
-            {
-                return null;
-            }
 
             var allowedFileTypes = new[] { "pdf", "jpg", "jpeg", "png" };
 
             if (!allowedFileTypes.Contains(
-                    document.FileType.ToLower()))
-            {
+                document.FileType.TrimStart('.').ToLowerInvariant()))
                 return null;
-            }
 
             const long maxFileSize = 5 * 1024 * 1024;
 
-            if (document.FileSize > maxFileSize)
-            {
+            if (document.FileData.Length > maxFileSize)
                 return null;
-            }
 
-            if (!await _repository.EmployeeExists(
-                    document.EmployeeProfileId))
-            {
+            if (document.FileSize != document.FileData.Length)
                 return null;
-            }
 
-            document.UploadedAt = DateTime.Now;
+            if (!await _repository.EmployeeExists(document.EmployeeProfileId))
+                return null;
+
+            document.FileSize = document.FileData.Length;
+            document.UploadedAt = DateTime.UtcNow;
 
             return await _repository.AddDocument(document);
         }

@@ -14,10 +14,13 @@
 
         public string? Reason { get; set; }
 
-        public string Status { get; set; }
+        public string Status { get; set; } = "PENDING";
 
         public string? RejectionReason { get; set; }
 
         public DateTime CreatedAt { get; set; }
+        public EmployeeProfile? EmployeeProfile { get; set; }
+
+        public LeaveType? LeaveType { get; set; }
     }
 }

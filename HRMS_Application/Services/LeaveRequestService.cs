@@ -12,39 +12,50 @@ namespace HRMS_Application.Services
             _repository = repository;
         }
 
-        public async Task<LeaveRequest?> CreateLeaveRequest(
-            LeaveRequest leaveRequest)
+
+        public async Task<int?> GetEmployeeProfileIdByUserId(int userId)
+        {
+            return await _repository.GetEmployeeProfileIdByUserId(userId);
+        }
+
+        public async Task<LeaveRequest?> CreateLeaveRequest(LeaveRequest leaveRequest)
         {
             if (leaveRequest == null)
             {
-                return null;
+                throw new LeaveRequestValidationException(
+            "Leave request data is missing.");
             }
 
             if (leaveRequest.EmployeeProfileId <= 0)
             {
-                return null;
+                throw new LeaveRequestValidationException(
+            "Invalid employee profile.");
             }
 
             if (leaveRequest.LeaveTypeId <= 0)
             {
-                return null;
+                throw new LeaveRequestValidationException(
+             "Please select a valid leave type.");
             }
 
             if (leaveRequest.EndDate < leaveRequest.StartDate)
             {
-                return null;
+                throw new LeaveRequestValidationException(
+             "End date cannot be earlier than start date.");
             }
 
             if (!await _repository.EmployeeExists(
                     leaveRequest.EmployeeProfileId))
             {
-                return null;
+                throw new LeaveRequestValidationException(
+            "Employee profile does not exist.");
             }
 
             if (!await _repository.LeaveTypeExists(
                     leaveRequest.LeaveTypeId))
             {
-                return null;
+                throw new LeaveRequestValidationException(
+             "Selected leave type does not exist.");
             }
 
             var balance = await _repository.GetLeaveBalance(
@@ -53,7 +64,8 @@ namespace HRMS_Application.Services
 
             if (balance == null)
             {
-                return null;
+                throw new LeaveRequestValidationException(
+            "No leave balance found for the selected leave type.");
             }
 
             var requestedDays = CalculateLeaveDays(
@@ -62,12 +74,15 @@ namespace HRMS_Application.Services
 
             if (requestedDays <= 0)
             {
-                return null;
+                throw new LeaveRequestValidationException(
+           "The selected date range contains no working days.");
             }
 
             if (requestedDays > balance.Remaining)
             {
-                return null;
+                throw new LeaveRequestValidationException(
+           $"Insufficient leave balance. Requested: {requestedDays} day(s), " +
+           $"Remaining: {balance.Remaining} day(s).");
             }
 
             var overlappingRequests =
@@ -78,7 +93,9 @@ namespace HRMS_Application.Services
 
             if (overlappingRequests.Any())
             {
-                return null;
+                throw new LeaveRequestValidationException(
+            "A pending or approved leave request already exists " +
+            "for the selected dates.");
             }
 
             balance.Reserved += requestedDays;
@@ -88,7 +105,7 @@ namespace HRMS_Application.Services
 
             await _repository.UpdateLeaveBalance(balance);
 
-            return await _repository.CreateLeaveRequest(leaveRequest);
+            return await _repository.CreateLeaveRequestWithBalance(leaveRequest, balance);
         }
 
         public async Task<LeaveRequest?> ApproveLeaveRequest(int id)
@@ -123,15 +140,10 @@ namespace HRMS_Application.Services
 
             leaveRequest.Status = "APPROVED";
 
-            await _repository.UpdateLeaveBalance(balance);
-            await _repository.UpdateLeaveRequest(leaveRequest);
-
-            return leaveRequest;
+            return await _repository.UpdateLeaveRequestWithBalance(leaveRequest, balance);
         }
 
-        public async Task<LeaveRequest?> RejectLeaveRequest(
-    int id,
-    string rejectionReason)
+        public async Task<LeaveRequest?> RejectLeaveRequest(int id, string rejectionReason)
         {
             var leaveRequest = await _repository.GetLeaveRequestById(id);
 
@@ -168,14 +180,9 @@ namespace HRMS_Application.Services
             leaveRequest.Status = "REJECTED";
             leaveRequest.RejectionReason = rejectionReason;
 
-            await _repository.UpdateLeaveBalance(balance);
-            await _repository.UpdateLeaveRequest(leaveRequest);
-
-            return leaveRequest;
+            return await _repository.UpdateLeaveRequestWithBalance(leaveRequest, balance);
         }
-        private int CalculateLeaveDays(
-            DateTime startDate,
-            DateTime endDate)
+        private int CalculateLeaveDays(DateTime startDate, DateTime endDate)
         {
             int days = 0;
 
@@ -193,5 +200,37 @@ namespace HRMS_Application.Services
 
             return days;
         }
+
+
+
+        public async Task<List<LeaveRequest>> GetAllLeaveRequests()
+        {
+            return await _repository.GetAllLeaveRequests();
+        }
+
+
+        public async Task<List<LeaveRequest>> GetLeaveRequestsByManagerId(
+            int managerId)
+        {
+            return await _repository.GetLeaveRequestsByManagerId(managerId);
+        }
+
+        public async Task<List<LeaveRequest>> GetLeaveRequestsByUserId(int userId)
+        {
+            return await _repository.GetLeaveRequestsByUserId(userId);
+        }
+
+        public async Task<List<LeaveBalance>> GetLeaveBalancesByUserId(int userId)
+        {
+            return await _repository.GetLeaveBalancesByUserId(userId);
+        }
+
+        public async Task<bool> IsLeaveRequestUnderManager(int leaveRequestId, int managerProfileId)
+        {
+            return await _repository.IsLeaveRequestUnderManager(
+                leaveRequestId,
+                managerProfileId);
+        }
+
     }
 }
