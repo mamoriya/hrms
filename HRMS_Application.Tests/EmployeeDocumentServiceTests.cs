@@ -47,11 +47,11 @@ namespace HRMS_Application.Tests
 
             var document = new EmployeeDocument
             {
-                EmployeeProfileId = 1,
+                EmployeeProfileId = 999,
                 FileName = "resume.pdf",
                 FileType = "pdf",
-                FilePath = "uploads/resume.pdf",
-                FileSize = 1024
+                FileData = new byte[] { 1, 2, 3, 4 },
+                FileSize = 4
             };
 
             var result = await service.AddDocument(document);
@@ -78,8 +78,8 @@ namespace HRMS_Application.Tests
                 EmployeeProfileId = 999,
                 FileName = "resume.pdf",
                 FileType = "pdf",
-                FilePath = "uploads/resume.pdf",
-                FileSize = 1024
+                FileData = new byte[] { 1, 2, 3, 4 },
+                FileSize = 4
             };
 
             var result = await service.AddDocument(document);
@@ -114,11 +114,11 @@ namespace HRMS_Application.Tests
 
             var document = new EmployeeDocument
             {
-                EmployeeProfileId = 1,
-                FileName = "",
+                EmployeeProfileId = 999,
+                FileName = "resume.pdf",
                 FileType = "pdf",
-                FilePath = "uploads/resume.pdf",
-                FileSize = 1024
+                FileData = new byte[] { 1, 2, 3, 4 },
+                FileSize = 4
             };
 
             var result = await service.AddDocument(document);
@@ -156,8 +156,8 @@ namespace HRMS_Application.Tests
                 EmployeeProfileId = 1,
                 FileName = "resume.pdf",
                 FileType = "pdf",
-                FilePath = "uploads/resume.pdf",
-                FileSize = 0
+                FileData = new byte[] { 1, 2, 3, 4 },
+                FileSize = 4,
             };
 
             var result = await service.AddDocument(document);
@@ -187,8 +187,8 @@ namespace HRMS_Application.Tests
                 EmployeeProfileId = 1,
                 FileName = "resume.pdf",
                 FileType = "pdf",
-                FilePath = "uploads/resume.pdf",
-                FileSize = 1024
+                FileData = new byte[] { 1, 2, 3, 4 },
+                FileSize = 4,
             });
 
             await context.SaveChangesAsync();
@@ -234,8 +234,8 @@ namespace HRMS_Application.Tests
                 EmployeeProfileId = 1,
                 FileName = "resume.pdf",
                 FileType = "pdf",
-                FilePath = "uploads/resume.pdf",
-                FileSize = 1024
+                FileData = new byte[] { 1, 2, 3, 4 },
+                FileSize = 4,
             });
 
             await context.SaveChangesAsync();
@@ -264,8 +264,8 @@ namespace HRMS_Application.Tests
                 EmployeeProfileId = 1,
                 FileName = "resume.pdf",
                 FileType = "pdf",
-                FilePath = "uploads/resume.pdf",
-                FileSize = 1024
+                FileData = new byte[] { 1, 2, 3, 4 },
+                FileSize = 4,
             });
 
             await context.SaveChangesAsync();
@@ -317,8 +317,8 @@ namespace HRMS_Application.Tests
                 EmployeeProfileId = 1,
                 FileName = "resume.exe",
                 FileType = "exe",
-                FilePath = "uploads/resume.exe",
-                FileSize = 1024
+                FileData = new byte[] { 1, 2, 3, 4 },
+                FileSize = 4,
             };
 
             var result = await service.AddDocument(document);
@@ -357,8 +357,8 @@ namespace HRMS_Application.Tests
                 EmployeeProfileId = 1,
                 FileName = "large.pdf",
                 FileType = "pdf",
-                FilePath = "uploads/large.pdf",
-                FileSize = (5 * 1024 * 1024) + 1
+                FileData = new byte[] { 1, 2, 3, 4 },
+                FileSize = 4,
             };
 
             var result = await service.AddDocument(document);

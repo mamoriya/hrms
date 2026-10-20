@@ -17,10 +17,10 @@ packages/
 *.log
 
 # Environment files
-.env
-.env.*
 
 # User-specific files
 *.user
 *.rsuser
 *.suo
+config.bat
+node_modules

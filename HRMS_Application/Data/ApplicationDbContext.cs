@@ -95,12 +95,12 @@ namespace HRMS_Application.Data
                       .IsRequired()
                       .HasMaxLength(20);
 
-                entity.Property(e => e.FilePath)
-                      .IsRequired()
-                      .HasMaxLength(500);
+                entity.Property(e => e.FileData)
+                        .HasColumnType("LONGBLOB")
+                        .IsRequired();
 
                 entity.Property(e => e.FileSize)
-                      .IsRequired();
+                      .IsRequired(); 
 
                 entity.Property(e => e.UploadedAt)
                       .IsRequired();
@@ -178,6 +178,7 @@ namespace HRMS_Application.Data
                       .IsRequired();
             });
 
+
             modelBuilder.Entity<LeaveRequest>(entity =>
             {
                 entity.ToTable("LeaveRequest");
@@ -203,16 +204,17 @@ namespace HRMS_Application.Data
                 entity.Property(e => e.CreatedAt)
                       .IsRequired();
 
-                entity.HasOne<EmployeeProfile>()
+                entity.HasOne(e => e.EmployeeProfile)
                       .WithMany()
                       .HasForeignKey(e => e.EmployeeProfileId)
                       .IsRequired();
 
-                entity.HasOne<LeaveType>()
+                entity.HasOne(e => e.LeaveType)
                       .WithMany()
                       .HasForeignKey(e => e.LeaveTypeId)
                       .IsRequired();
             });
+
         }
     }
 }

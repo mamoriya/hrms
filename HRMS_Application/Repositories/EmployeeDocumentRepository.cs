@@ -34,6 +34,15 @@ namespace HRMS_Application.Repositories
         {
             return await _context.EmployeeDocuments
                 .Where(d => d.EmployeeProfileId == employeeId)
+                .Select(d => new EmployeeDocument
+                {
+                    Id = d.Id,
+                    EmployeeProfileId = d.EmployeeProfileId,
+                    FileName = d.FileName,
+                    FileType = d.FileType,
+                    FileSize = d.FileSize,
+                    UploadedAt = d.UploadedAt
+                })
                 .ToListAsync();
         }
 

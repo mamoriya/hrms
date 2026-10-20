@@ -61,16 +61,28 @@ namespace HRMS_Application.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteDepartment(int id)
+        public async Task<IActionResult> DeleteDepartment(
+            int id,
+            DeleteDepartmentRequest request)
         {
-            var result = await _service.DeleteDepartment(id);
-
-            if (!result)
+            try
             {
-                return NotFound("Department not found.");
-            }
+                var result = await _service.DeleteDepartment(
+                    id,
+                    request.NewDepartmentId);
 
-            return Ok("Department deleted successfully.");
+                if (!result)
+                {
+                    return NotFound("Department not found.");
+                }
+
+                return Ok("Department deleted successfully.");
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
+
     }
 }

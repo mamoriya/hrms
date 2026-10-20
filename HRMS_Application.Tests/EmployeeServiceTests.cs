@@ -34,15 +34,10 @@ public class EmployeeServiceTests
 
         await context.SaveChangesAsync();
 
-        var employee = new EmployeeProfile
+        var request = new CreateEmployeeRequest
         {
-            User = new User
-            {
-                Email = "john@example.com",
-                Password = "Test123",
-                Role = "Employee"
-            },
-
+            Email = "john@example.com",
+            Password = "Test123",
             FirstName = "John",
             LastName = "Doe",
             JobTitle = "Developer",
@@ -51,13 +46,14 @@ public class EmployeeServiceTests
         };
 
         // Act
-        var result = await service.CreateEmployee(employee);
+        var result = await service.CreateEmployee(request);
 
         // Assert
         Assert.NotNull(result);
         Assert.Equal("John", result.FirstName);
         Assert.Equal("Doe", result.LastName);
     }
+
 
     [Fact]
     public async Task CreateEmployee_WithEmptyFirstName_ShouldNotCreateEmployee()
@@ -68,9 +64,10 @@ public class EmployeeServiceTests
         var repository = new EmployeeRepository(context);
         var service = new EmployeeService(repository);
 
-        var employee = new EmployeeProfile
+        var request = new CreateEmployeeRequest
         {
-            UserId = 2,
+            Email = "emptyfirstname@example.com",
+            Password = "Test123",
             FirstName = "",
             LastName = "Doe",
             JobTitle = "Developer",
@@ -79,11 +76,12 @@ public class EmployeeServiceTests
         };
 
         // Act
-        var result = await service.CreateEmployee(employee);
+        var result = await service.CreateEmployee(request);
 
         // Assert
         Assert.Null(result);
     }
+
 
     [Fact]
     public async Task CreateEmployee_WithEmptyLastName_ShouldNotCreateEmployee()
@@ -94,9 +92,10 @@ public class EmployeeServiceTests
         var repository = new EmployeeRepository(context);
         var service = new EmployeeService(repository);
 
-        var employee = new EmployeeProfile
+        var request = new CreateEmployeeRequest
         {
-            UserId = 3,
+            Email = "emptylastname@example.com",
+            Password = "Test123",
             FirstName = "John",
             LastName = "",
             JobTitle = "Developer",
@@ -105,11 +104,12 @@ public class EmployeeServiceTests
         };
 
         // Act
-        var result = await service.CreateEmployee(employee);
+        var result = await service.CreateEmployee(request);
 
         // Assert
         Assert.Null(result);
     }
+
 
     [Fact]
     public async Task CreateEmployee_WithNullEmployee_ShouldNotCreateEmployee()
@@ -137,9 +137,10 @@ public class EmployeeServiceTests
         var repository = new EmployeeRepository(context);
         var service = new EmployeeService(repository);
 
-        var employee = new EmployeeProfile
+        var request = new CreateEmployeeRequest
         {
-            UserId = 4,
+            Email = "whitespacefirstname@example.com",
+            Password = "Test123",
             FirstName = "   ",
             LastName = "Doe",
             JobTitle = "Developer",
@@ -148,7 +149,7 @@ public class EmployeeServiceTests
         };
 
         // Act
-        var result = await service.CreateEmployee(employee);
+        var result = await service.CreateEmployee(request);
 
         // Assert
         Assert.Null(result);
@@ -164,9 +165,10 @@ public class EmployeeServiceTests
         var repository = new EmployeeRepository(context);
         var service = new EmployeeService(repository);
 
-        var employee = new EmployeeProfile
+        var request = new CreateEmployeeRequest
         {
-            UserId = 5,
+            Email = "whitespacelastname@example.com",
+            Password = "Test123",
             FirstName = "John",
             LastName = "   ",
             JobTitle = "Developer",
@@ -175,11 +177,12 @@ public class EmployeeServiceTests
         };
 
         // Act
-        var result = await service.CreateEmployee(employee);
+        var result = await service.CreateEmployee(request);
 
         // Assert
         Assert.Null(result);
     }
+
 
     [Fact]
     public async Task CreateEmployee_WithDuplicateEmail_ShouldNotCreateEmployee()
@@ -198,14 +201,10 @@ public class EmployeeServiceTests
 
         await context.SaveChangesAsync();
 
-        var employee1 = new EmployeeProfile
+        var request1 = new CreateEmployeeRequest
         {
-            User = new User
-            {
-                Email = "same@example.com",
-                Password = "Test123",
-                Role = "Employee"
-            },
+            Email = "same@example.com",
+            Password = "Test123",
             FirstName = "John",
             LastName = "Doe",
             JobTitle = "Developer",
@@ -213,14 +212,10 @@ public class EmployeeServiceTests
             JoiningDate = DateTime.Now
         };
 
-        var employee2 = new EmployeeProfile
+        var request2 = new CreateEmployeeRequest
         {
-            User = new User
-            {
-                Email = "same@example.com",
-                Password = "Test123",
-                Role = "Employee"
-            },
+            Email = "same@example.com",
+            Password = "Test123",
             FirstName = "Alex",
             LastName = "Smith",
             JobTitle = "Designer",
@@ -229,12 +224,15 @@ public class EmployeeServiceTests
         };
 
         // Act
-        await service.CreateEmployee(employee1);
-        var result = await service.CreateEmployee(employee2);
+        await service.CreateEmployee(request1);
+
+        var result = await service.CreateEmployee(request2);
 
         // Assert
         Assert.Null(result);
     }
+
+
     [Fact]
     public async Task CreateEmployee_WithInvalidDepartment_ShouldNotCreateEmployee()
     {
@@ -244,15 +242,10 @@ public class EmployeeServiceTests
         var repository = new EmployeeRepository(context);
         var service = new EmployeeService(repository);
 
-        var employee = new EmployeeProfile
+        var request = new CreateEmployeeRequest
         {
-            User = new User
-            {
-                Email = "invaliddepartment@example.com",
-                Password = "Test123",
-                Role = "Employee"
-            },
-
+            Email = "invaliddepartment@example.com",
+            Password = "Test123",
             FirstName = "John",
             LastName = "Doe",
             JobTitle = "Developer",
@@ -261,7 +254,7 @@ public class EmployeeServiceTests
         };
 
         // Act
-        var result = await service.CreateEmployee(employee);
+        var result = await service.CreateEmployee(request);
 
         // Assert
         Assert.Null(result);
